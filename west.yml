@@ -29,6 +29,7 @@ manifest:
           - cmsis
           - cmsis_6
           - hal_stm32
+          - mbedtls   # PSA crypto for the Bluetooth host
 
     - name: berry
       remote: berry-lang
