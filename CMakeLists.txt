@@ -44,16 +44,12 @@ add_custom_command(
 )
 add_custom_target(berry_coc DEPENDS ${BERRY_GENERATE_DIR}/be_const_strtab.h)
 
-# --- Berry core as a Zephyr library -------------------------------------------
-
-zephyr_library_named(berry)
-zephyr_library_sources(${BERRY_SOURCES})
-zephyr_library_include_directories(${BERRY_DIR}/src ${BERRY_CONF_DIR})
-add_dependencies(berry berry_coc)
-
 # --- Application ---------------------------------------------------------------
+# The Berry core is compiled straight into the app target: zephyr_library()
+# is not available to application CMakeLists (Zephyr application mode).
 
 target_sources(app PRIVATE
+  ${BERRY_SOURCES}
   src/main.c
   src/nus_io.c
   src/berry_repl.c
