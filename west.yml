@@ -1,0 +1,39 @@
+# BLEberry west manifest
+#
+# Workspace layout (T2 topology, this repo is the manifest repo):
+#
+#   <workspace>/
+#   ├── bleberry/            <- this repository
+#   ├── zephyr/              <- Zephyr RTOS (main)
+#   └── modules/
+#       ├── hal/stm32/       <- STM32 HAL + BLE link layer
+#       └── lib/berry/       <- Berry scripting language
+#
+# Setup:
+#   west init -l bleberry
+#   west update
+manifest:
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+    - name: berry-lang
+      url-base: https://github.com/berry-lang
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject-rtos
+      revision: main
+      import:
+        # Only pull what the STM32WBA targets actually need.
+        name-allowlist:
+          - cmsis
+          - cmsis_6
+          - hal_stm32
+
+    - name: berry
+      remote: berry-lang
+      revision: master
+      path: modules/lib/berry
+
+  self:
+    path: bleberry

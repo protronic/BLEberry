@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: Apache-2.0
+
+menu "BLEberry - Berry REPL over BLE NUS"
+
+config BLEBERRY_ECHO
+	bool "Echo received characters back over NUS"
+	help
+	  Enable this when the connected terminal does not display the
+	  characters it sends (raw character terminals). Most mobile NUS
+	  terminal apps (nRF Toolbox, Serial Bluetooth Terminal) show sent
+	  lines themselves, so the default is off.
+
+config BLEBERRY_LINE_MAX
+	int "Maximum REPL input line length"
+	default 256
+
+config BLEBERRY_RX_RINGBUF_SIZE
+	int "Receive ring buffer size in bytes"
+	default 1024
+
+config BLEBERRY_TX_BUF_SIZE
+	int "Transmit coalescing buffer size in bytes"
+	default 244
+
+config BLEBERRY_REPL_STACK_SIZE
+	int "Stack size of the Berry REPL thread"
+	default 12288
+	help
+	  The Berry compiler uses recursive descent parsing, so the REPL
+	  thread needs a generous stack.
+
+endmenu
+
+source "Kconfig.zephyr"
