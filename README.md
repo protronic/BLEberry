@@ -42,7 +42,13 @@ west init -l bleberry
 west update
 west zephyr-export
 pip install -r zephyr/scripts/requirements-base.txt
+
+# BLE-Controller-Bibliothek (LinkLayer) für STM32WBA holen:
+west blobs fetch hal_stm32
 ```
+
+Zephyr `main` benötigt **Python ≥ 3.12** und das **Zephyr SDK ≥ 1.0.0**
+(bei SDK 1.0.x liegt die Toolchain unter `<sdk>/gnu/arm-zephyr-eabi`).
 
 Zusätzlich wird das [Zephyr SDK](https://docs.zephyrproject.org/latest/develop/getting_started/index.html)
 (arm-zephyr-eabi) benötigt, zum Flashen der STM32WBA-Boards außerdem
