@@ -76,13 +76,36 @@ west flash
    Ausgaben kommen als Notifications zurück. Mehrzeilige Eingaben
    (z. B. `def`/`while`-Blöcke) erkennt die REPL automatisch (`>> `-Prompt).
 
-Eingebaute native Funktionen:
+Eingebaute native Funktionen (`help()` in der REPL zeigt, was das
+jeweilige Board tatsächlich anbietet):
 
-| Funktion | Wirkung |
-|---|---|
-| `millis()` | Millisekunden seit Boot |
-| `led(true/false)` | User-LED (`led0`-Alias) schalten |
-| `reboot()` | Kaltstart des Boards |
+| Funktion | Wirkung | Voraussetzung |
+|---|---|---|
+| `help()` | Funktionsübersicht | immer |
+| `millis()` | Millisekunden seit Boot | immer |
+| `reboot()` | Kaltstart des Boards | immer |
+| `led(on)` / `led(i, on)` | User-LED `i` schalten | `led0..led2`-Alias |
+| `button([i])` | User-Button lesen (1 = gedrückt) | `sw0..sw2`-Alias |
+| `joy()` | Joystick: `"up"/"down"/"left"/"right"/"enter"/""` | `CONFIG_INPUT` (WBA6-DK) |
+| `temp()` | Die-Temperatur in °C | `CONFIG_SENSOR` + `die-temp0` |
+| `pinmode(p, pin, mode)` | GPIO konfigurieren, `p="a".."h"`, mode: `in`, `in_pu`, `in_pd`, `out`, `out_od` | immer |
+| `dwrite(p, pin, v)` | GPIO-Pin schreiben | immer |
+| `dread(p, pin)` | GPIO-Pin lesen | immer |
+
+Beispiel auf dem WBA6-DK:
+
+```
+> led(1, true)          # rote LD5 an
+> pinmode("a", 5, "out")
+> dwrite("a", 5, 1)     # PA5 high (Arduino-Header)
+> temp()
+27.5
+> joy()
+up
+```
+
+Eine maschinenlesbare Gerätebeschreibung (Blocks/Kanäle, analog zum
+Pico-Telemetry-Format) liegt unter `descriptors/wba6dk_berry_v1.json`.
 
 Berry-Module: `string`, `math`, `json`, `gc`, `introspect`, `global`,
 `strict` (konfiguriert in `berry_conf/berry_conf.h`).

@@ -1,0 +1,52 @@
+{
+  "_id": "wba6dk_berry_v1",
+  "name": "WBA6-DK Berry REPL",
+  "version": "v1",
+  "description": "Berry-Sprach-REPL über BLE NUS auf dem STM32WBA65I-DK1: User-LEDs, generische GPIOs (Arduino-R3-Header), 5-Wege-Joystick, Die-Temperatursensor, Reboot und Debug-Log über die UART-Konsole.",
+  "board": "stm32wba65i_dk1",
+  "transport": {
+    "type": "ble_nus",
+    "service_uuid": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+    "device_name": "BLEberry"
+  },
+  "blocks": [
+    "berry_repl_task",
+    "help",
+    "millis",
+    "reboot",
+    "led_set",
+    "joystick_read",
+    "die_temp_read",
+    "gpio_mode",
+    "gpio_write",
+    "gpio_read",
+    "log_print"
+  ],
+  "channels": {
+    "inputs": [
+      "JOY_UP",
+      "JOY_DOWN",
+      "JOY_LEFT",
+      "JOY_RIGHT",
+      "JOY_SELECT",
+      "DIE_TEMP",
+      "ARDUINO_GPIO"
+    ],
+    "outputs": [
+      "LED0_GREEN_LD6",
+      "LED1_RED_LD5",
+      "ARDUINO_GPIO"
+    ]
+  },
+  "repl_functions": {
+    "help()": "Übersicht der verfügbaren Funktionen",
+    "millis()": "Millisekunden seit Boot",
+    "reboot()": "Kaltstart",
+    "led(on) / led(i, on)": "User-LED schalten, i = 0 (grün LD6), 1 (rot LD5)",
+    "joy()": "Joystick: \"up\", \"down\", \"left\", \"right\", \"enter\" oder \"\"",
+    "temp()": "Die-Temperatur in Grad Celsius",
+    "pinmode(p, pin, mode)": "GPIO konfigurieren, p = \"a\"..\"h\", mode: in, in_pu, in_pd, out, out_od",
+    "dwrite(p, pin, v)": "GPIO-Pin schreiben",
+    "dread(p, pin)": "GPIO-Pin lesen"
+  }
+}
