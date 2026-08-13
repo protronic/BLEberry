@@ -9,6 +9,7 @@
 #include "berry.h"
 #include "be_repl.h"
 #include "berry_io.h"
+#include "bb_runtime.h"
 #include "nus_io.h"
 
 LOG_MODULE_REGISTER(berry_repl, CONFIG_LOG_DEFAULT_LEVEL);
@@ -18,6 +19,12 @@ LOG_MODULE_REGISTER(berry_repl, CONFIG_LOG_DEFAULT_LEVEL);
 	"type berry code (e.g. 1+2) or help()\n"
 
 static char line_buf[CONFIG_BLEBERRY_LINE_MAX];
+static bvm *repl_vm;
+
+static void repl_idle_tick(void)
+{
+	bb_runtime_tick(repl_vm);
+}
 
 static char *repl_getline(const char *prompt)
 {
@@ -38,6 +45,7 @@ static void repl_thread(void *p1, void *p2, void *p3)
 	ARG_UNUSED(p3);
 
 	berry_io_init();
+	nus_io_set_idle_hook(repl_idle_tick);
 
 	for (;;) {
 		bvm *vm = be_vm_new();
@@ -48,6 +56,8 @@ static void repl_thread(void *p1, void *p2, void *p3)
 			continue;
 		}
 		berry_io_register(vm);
+		bb_runtime_load(vm);
+		repl_vm = vm;
 
 		be_writestring(BANNER);
 
@@ -58,6 +68,7 @@ static void repl_thread(void *p1, void *p2, void *p3)
 		} else {
 			be_writestring("REPL terminated, restarting VM\n");
 		}
+		repl_vm = NULL;
 		nus_io_flush();
 		be_vm_delete(vm);
 	}

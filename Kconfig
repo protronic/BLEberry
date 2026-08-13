@@ -29,6 +29,14 @@ config BLEBERRY_REPL_STACK_SIZE
 	  The Berry compiler uses recursive descent parsing, so the REPL
 	  thread needs a generous stack.
 
+config BLEBERRY_TICK_MS
+	int "Scheduler tick for sps.every() tasks in ms"
+	default 10
+	help
+	  While the REPL waits for input it periodically runs due
+	  BlockBerry mini-PLC tasks (sps.every). This sets the polling
+	  granularity; task intervals shorter than this are not useful.
+
 endmenu
 
 source "Kconfig.zephyr"

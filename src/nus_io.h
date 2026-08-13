@@ -35,4 +35,8 @@ void nus_io_send_direct(const char *str);
  * handling backspace and optional echo. Returns buf. */
 char *nus_io_read_line(char *buf, size_t size);
 
+/* Hook invoked periodically (every CONFIG_BLEBERRY_TICK_MS) while
+ * nus_io_read_line() is waiting for input. Runs in the reader thread. */
+void nus_io_set_idle_hook(void (*hook)(void));
+
 #endif /* BLEBERRY_NUS_IO_H_ */

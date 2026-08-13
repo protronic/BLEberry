@@ -54,6 +54,7 @@ target_sources(app PRIVATE
   src/nus_io.c
   src/berry_repl.c
   src/berry_io.c
+  src/bb_runtime.c
   src/berry_port.c
   src/be_modtab.c
 )

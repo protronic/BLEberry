@@ -104,8 +104,38 @@ Beispiel auf dem WBA6-DK:
 up
 ```
 
-Eine maschinenlesbare Gerätebeschreibung (Blocks/Kanäle, analog zum
-Pico-Telemetry-Format) liegt unter `descriptors/wba6dk_berry_v1.json`.
+## BlockBerry-Integration
+
+Die Firmware enthält die Laufzeit-API, die der
+[BlockBerry-Editor](https://github.com/protronic/blockberry-editor)
+in seinem generierten Berry-Code aufruft (`src/berry_generator.ts`):
+
+| Editor-Block | Generierter Aufruf | Umsetzung auf dem Board |
+|---|---|---|
+| `mini_sps_task` | `sps.every(ms, fn)` | zyklischer Task, läuft während die REPL auf Eingaben wartet (`CONFIG_BLEBERRY_TICK_MS`) |
+| `sps_wait_ms` | `sps.wait(ms)` | pausiert nur diesen Task bis zum Ablauf der Wartezeit |
+| `sps_digital_input` | `sps.input("KANAL")` | Kanalname → Joystick/Button/GPIO |
+| `sps_digital_output` | `sps.output("KANAL", v)` | Kanalname → LED/GPIO |
+| `sensor_ready` / `sensor_temp` | `sensor.ready()` / `sensor.temp()` | Die-Temperatursensor |
+| `escalation_rule` | `escalation.raise_if(id, cond, level, msg, cooldown)` | zustandsbehaftet mit Sperrzeit |
+| `signal_set` | `signal.set(name, state)` | `normal`→grüne LED, `warning`/`alarm`→rote LED |
+| `monitor_value` | `monitor.record(metric, value, unit)` | Ausgabe ins Log (NUS + Konsole) |
+| `log_print` | `log.print(msg)` | Ausgabe ins Log (NUS + Konsole) |
+
+Alles Boardspezifische ist **Kanal-Parameter** statt eigener Blöcke:
+
+* `"LED0"`..`"LED2"` — User-LEDs
+* `"SW0"`..`"SW2"` — User-Buttons (Nucleo-WBA55)
+* `"JOY_UP"`, `"JOY_DOWN"`, `"JOY_LEFT"`, `"JOY_RIGHT"`, `"JOY_SELECT"` — Joystick (WBA6-DK)
+* `"D0"`..`"D15"` — Arduino-R3-Header (WBA6-DK, per Board-Map)
+* `"PA0"`..`"PH15"` — beliebiger GPIO nach Port/Pin
+
+GPIO-Kanäle werden beim ersten Zugriff automatisch konfiguriert
+(Eingänge mit Pull-up, Ausgänge push-pull).
+
+Das zugehörige Geräteprofil für den Editor (CouchDB-Dokument, nur
+Block-Typen aus `blocks.ts` plus Kanalliste) liegt unter
+`descriptors/wba6dk_berry_v1.json`.
 
 Berry-Module: `string`, `math`, `json`, `gc`, `introspect`, `global`,
 `strict` (konfiguriert in `berry_conf/berry_conf.h`).

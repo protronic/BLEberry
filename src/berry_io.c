@@ -350,6 +350,9 @@ static int m_help(bvm *vm)
 	be_writestring("  pinmode(p, pin, mode)  p=\"a\"..\"h\", mode: in,in_pu,in_pd,out,out_od\n"
 		       "  dwrite(p, pin, v)      write GPIO pin\n"
 		       "  dread(p, pin)          read GPIO pin\n"
+		       "BlockBerry runtime: sps.every/wait/input/output, sensor.ready/temp,\n"
+		       "  escalation.raise_if, signal.set, monitor.record, log.print\n"
+		       "  channels: \"LED0\", \"SW0\", \"JOY_UP\", \"D2\"..\"D15\", \"PA0\"..\"PH15\"\n"
 		       "modules: import string / math / json / gc / introspect\n"
 		       "docs: https://berry-lang.github.io/\n");
 	be_return_nil(vm);

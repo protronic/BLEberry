@@ -124,12 +124,22 @@ void nus_io_send_direct(const char *str)
 	send_chunked(str, strlen(str));
 }
 
+static void (*idle_hook)(void);
+
+void nus_io_set_idle_hook(void (*hook)(void))
+{
+	idle_hook = hook;
+}
+
 static uint8_t rx_getchar(void)
 {
 	uint8_t c;
 
 	while (ring_buf_get(&rx_rb, &c, 1) == 0) {
-		k_sem_take(&rx_sem, K_FOREVER);
+		if (k_sem_take(&rx_sem, K_MSEC(CONFIG_BLEBERRY_TICK_MS)) != 0 &&
+		    idle_hook != NULL) {
+			idle_hook();
+		}
 	}
 	return c;
 }
