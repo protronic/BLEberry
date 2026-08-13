@@ -44,6 +44,18 @@ add_custom_command(
 )
 add_custom_target(berry_coc DEPENDS ${BERRY_GENERATE_DIR}/be_const_strtab.h)
 
+# --- Firmware git hash (regenerated on every build) ---------------------------
+
+set(BLEBERRY_GIT_H ${CMAKE_BINARY_DIR}/bleberry_git.h)
+add_custom_target(bleberry_git_hash
+  COMMAND ${CMAKE_COMMAND}
+          -DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}
+          -DOUT=${BLEBERRY_GIT_H}
+          -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/git_hash.cmake
+  BYPRODUCTS ${BLEBERRY_GIT_H}
+  COMMENT "Updating bleberry_git.h"
+)
+
 # --- Application ---------------------------------------------------------------
 # The Berry core is compiled straight into the app target: zephyr_library()
 # is not available to application CMakeLists (Zephyr application mode).
@@ -62,5 +74,6 @@ target_include_directories(app PRIVATE
   src
   ${BERRY_DIR}/src
   ${BERRY_CONF_DIR}
+  ${CMAKE_BINARY_DIR}
 )
-add_dependencies(app berry_coc)
+add_dependencies(app berry_coc bleberry_git_hash)

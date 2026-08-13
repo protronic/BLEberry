@@ -81,7 +81,7 @@ jeweilige Board tatsächlich anbietet):
 
 | Funktion | Wirkung | Voraussetzung |
 |---|---|---|
-| `help()` | Funktionsübersicht | immer |
+| `help()` | Funktionsübersicht inkl. Firmware-Git-Hash | immer |
 | `millis()` | Millisekunden seit Boot | immer |
 | `reboot()` | Kaltstart des Boards | immer |
 | `led(on)` / `led(i, on)` | User-LED `i` schalten | `led0..led2`-Alias |

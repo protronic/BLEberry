@@ -26,6 +26,7 @@
 
 #include "berry_io.h"
 #include "nus_io.h"
+#include "bleberry_git.h"
 
 #if defined(CONFIG_SENSOR) && DT_NODE_EXISTS(DT_ALIAS(die_temp0))
 #define HAS_DIE_TEMP 1
@@ -326,7 +327,8 @@ static int m_dread(bvm *vm)
 
 static int m_help(bvm *vm)
 {
-	be_writestring("BLEberry REPL (" CONFIG_BOARD ") - built-in functions:\n"
+	be_writestring("BLEberry REPL (" CONFIG_BOARD ", git " BLEBERRY_GIT_HASH ")"
+		       " - built-in functions:\n"
 		       "  help()                 this help\n"
 		       "  millis()               uptime in ms\n"
 		       "  reboot()               cold reboot\n");
