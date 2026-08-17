@@ -1,0 +1,43 @@
+/*
+ * STM32WBA65I-DK1 on Zephyr 4.4.2: radio clock, die-temp (RF calib), IRQs.
+ *
+ * Board DTS defaults to HSE/2 @ 16 MHz and ahb5/2 — too slow for the BLE
+ * link layer (HCI comes up, advertising is not on air). Align with upstream /
+ * nucleo_wba65ri: 32 MHz SYSCLK, ahb5-prescaler = 1.
+ */
+
+/ {
+	aliases {
+		die-temp0 = &die_temp;
+	};
+};
+
+&clk_hse {
+	status = "okay";
+	/delete-property/ hse-div2;
+	/delete-property/ hse-trimming;
+};
+
+&rcc {
+	clocks = <&clk_hse>;
+	clock-frequency = <DT_FREQ_M(32)>; /* minimum for radio events */
+	ahb-prescaler = <1>;
+	ahb5-prescaler = <1>;
+	apb1-prescaler = <1>;
+	apb2-prescaler = <2>;
+	apb7-prescaler = <1>;
+};
+
+&die_temp {
+	status = "okay";
+};
+
+/*
+ * Radio IRQ (66) + SW-low (HASH=61) so NUM_IRQS is large enough
+ * (Zephyr 4.4 does not yet declare these on WBA65).
+ */
+&bt_hci_wba {
+	interrupt-parent = <&nvic>;
+	interrupts = <66 0>, <61 0>;
+	interrupt-names = "radio", "radio-sw-low";
+};
